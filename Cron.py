@@ -44,7 +44,7 @@ def convert():
                 my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out])
 
                 my_thread.start()
-                my_thread.join(5)
+                my_thread.join(60)
 
             except OSError as e:
                 print('error de os')
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     while True:
         Thread(target=convert).start()
         print('alive')
-        sleep(5)
+        sleep(3)
 
 
 
