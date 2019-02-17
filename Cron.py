@@ -1,14 +1,37 @@
+import threading
+from queue import Queue
 import Settings
-import datetime
 import subprocess
 from DbConnection import DbConnection
 from Voice import Voice
 
+NUMBER_OF_THREADS = 5
+JOB_NUMBER = [1]
+queue = Queue()
 
-if __name__ == '__main__':
 
-    f = open(Settings.MEDIA_DIR + "log.txt", "a")
-    f.write(str(datetime.datetime.now()) + ": Inicia \n")
+def create_workers():
+    for _ in range(NUMBER_OF_THREADS):
+        t = threading.Thread(target=work)
+        t.daemon = True
+        t.start()
+
+
+def work():
+    while True:
+        x = queue.get()
+        if x == 1:
+            convert()
+        queue.task_done()
+
+
+def create_jobs():
+    for x in JOB_NUMBER:
+        queue.put(x)
+    queue.join()
+
+
+def convert():
     list_voices = []
     try:
         database_connection = DbConnection()
@@ -43,5 +66,10 @@ if __name__ == '__main__':
                         print('Error actualizando')
             except OSError as e:
                 print('error de os')
+
+
+if __name__ == '__main__':
+    create_workers()
+    create_jobs()
 
 
