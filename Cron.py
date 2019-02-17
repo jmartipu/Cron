@@ -29,7 +29,7 @@ def convert():
         with database_connection:
             query_voices = database_connection.query(Voice.UNCONVERTED_FILES)
             for voice in query_voices:
-                list_voices.append(Voice(id_num=voice[0], voice_file=[1], email=voice[2],
+                list_voices.append(Voice(id_num=voice[0], voice_file=voice[1], email=voice[2],
                                          name=voice[3], tittle=voice[4]))
             if list_voices.__len__() != 0:
                 database_connection.update(Voice.create_update_converting_sql(list_voices))
