@@ -1,4 +1,5 @@
 import Settings
+import datetime
 import subprocess
 from DbConnection import DbConnection
 from Voice import Voice
@@ -6,6 +7,8 @@ from Voice import Voice
 
 if __name__ == '__main__':
 
+    f = open(Settings.MEDIA_DIR + "log.txt", "a")
+    f.write(str(datetime.datetime.now()) + ": Inicia \n")
     list_voices = []
     try:
         database_connection = DbConnection()
