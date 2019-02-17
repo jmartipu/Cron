@@ -1,6 +1,5 @@
 from threading import Thread
 from time import sleep
-
 import Settings
 import subprocess
 from DbConnection import DbConnection
@@ -19,6 +18,7 @@ def ffmpeg(media_in, media_out, id_num, path_out):
                 database_connection.update(Voice.create_update_converted_sql(id_num, path_out))
         except:
             print('Error actualizando')
+
 
 def convert():
     list_voices = []
@@ -52,7 +52,7 @@ def convert():
 
 if __name__ == '__main__':
     while True:
-        Thread(target=convert)
+        Thread(target=convert).start()
         print('alive')
         sleep(5)
 
