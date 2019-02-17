@@ -1,12 +1,10 @@
 from threading import Thread
 from time import sleep
-
 import Settings
 import subprocess
 from DbConnection import DbConnection
 from Voice import Voice
-
-
+    
 def convert():
     list_voices = []
     try:
@@ -46,7 +44,7 @@ def convert():
 
 if __name__ == '__main__':
     while True:
-        Thread(target=convert)
+        Thread(target=convert).start()
         print('alive')
         sleep(5)
 
