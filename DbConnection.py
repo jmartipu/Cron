@@ -1,15 +1,16 @@
 import psycopg2
+import Settings
 
 
 class DbConnection:
     def __enter__(self):
         try:
             self.connection = psycopg2.connect(
-                host="localhost",
-                port="5000",
-                database="contests",
-                user="contests",
-                password="Admin.01"
+                host=Settings.HOST,
+                port=Settings.PORT,
+                database=Settings.DATABASE,
+                user=Settings.USER,
+                password=Settings.PASSWORD,
             )
             self.connection.autocommit = True
             self.cursor = self.connection.cursor()
@@ -35,7 +36,7 @@ class DbConnection:
         try:
             self.cursor.execute(query)
         except:
-            print("Error en actualización")
+            print("Error en actualizacion")
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.connection.close()
