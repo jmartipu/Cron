@@ -17,14 +17,13 @@ if __name__ == '__main__':
                 database_connection.update(Voice.create_update_sql(list_voices))
     except:
         print('error en la base de datos')
-        
-    for voice in list_voices:
-        file = voice.voice_file.rsplit('/', 1)[-1]
-        file_mp3 = file[:-3]
 
-        if file[-3:] != 'mp3':
+    for voice in list_voices:
+        file_mp3 = voice.voice_file[:-3]
+
+        if voice.voice_file[-3:] != 'mp3':
             try:
-                output = subprocess.call(['ffmpeg', '-i', Settings.MEDIA_DIR + file,
+                output = subprocess.call(['ffmpeg', '-i', Settings.MEDIA_DIR + voice.voice_file,
                                           Settings.MEDIA_COMPLETED_DIR + file_mp3 + 'mp3', '-y'])
                 if output < 0:
                     print('error')
