@@ -7,6 +7,19 @@ from DbConnection import DbConnection
 from Voice import Voice
 
 
+def ffmpeg(media_in, media_out, id_num, path_out):
+    output = subprocess.call(['ffmpeg', '-i', media_in,
+                     media_out, '-y'])
+    if output < 0:
+        print('error en conversion')
+    else:
+        try:
+            database_connection = DbConnection()
+            with database_connection:
+                database_connection.update(Voice.create_update_converted_sql(id_num, path_out))
+        except:
+            print('Error actualizando')
+
 def convert():
     list_voices = []
     try:
@@ -28,18 +41,11 @@ def convert():
                 media_in = Settings.MEDIA_DIR + voice.voice_file
                 path_out = 'converted/' + file_mp3 + 'mp3'
                 media_out = Settings.MEDIA_DIR + path_out
+                my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out])
 
-                output = subprocess.call(['ffmpeg', '-i', media_in,
-                                          media_out, '-y'])
-                if output < 0:
-                    print('error en conversion')
-                else:
-                    try:
-                        database_connection = DbConnection()
-                        with database_connection:
-                            database_connection.update(Voice.create_update_converted_sql(voice.id_num, path_out))
-                    except:
-                        print('Error actualizando')
+                my_thread.start()
+                my_thread.join(5)
+
             except OSError as e:
                 print('error de os')
 
