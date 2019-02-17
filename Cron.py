@@ -14,7 +14,7 @@ if __name__ == '__main__':
             for voice in query_voices:
                 list_voices.append(Voice(voice[0], voice[1]))
             if list_voices.__len__() != 0:
-                database_connection.update(Voice.create_update_sql(list_voices))
+                database_connection.update(Voice.create_update_converting_sql(list_voices))
     except:
         print('error en la base de datos')
 
@@ -23,12 +23,21 @@ if __name__ == '__main__':
 
         if voice.voice_file[-3:] != 'mp3':
             try:
-                output = subprocess.call(['ffmpeg', '-i', Settings.MEDIA_DIR + voice.voice_file,
-                                          Settings.MEDIA_COMPLETED_DIR + file_mp3 + 'mp3', '-y'])
+                media_in = Settings.MEDIA_DIR + voice.voice_file
+                path_out = 'converted/' + file_mp3 + 'mp3'
+                media_out = Settings.MEDIA_DIR + path_out
+
+                output = subprocess.call(['ffmpeg', '-i', media_in,
+                                          media_out, '-y'])
                 if output < 0:
-                    print('error')
+                    print('error en conversion')
                 else:
-                    print('ok')
+                    try:
+                        database_connection = DbConnection()
+                        with database_connection:
+                            database_connection.update(Voice.create_update_converted_sql(voice.id_num, path_out))
+                    except:
+                        print('Error actualizando')
             except OSError as e:
                 print('error de os')
 

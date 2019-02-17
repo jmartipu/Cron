@@ -11,7 +11,7 @@ class Voice:
         return str(self.id_num)
 
     @staticmethod
-    def create_update_sql(list_voices):
+    def create_update_converting_sql(list_voices):
         sql = None
         if list_voices is not None:
             sql = "UPDATE contests_voice SET state = 'CVG' WHERE id in("
@@ -19,5 +19,15 @@ class Voice:
                 sql = sql + str(voice.id_num) + ","
             sql = sql[:-1]
             sql = sql + ")"
+        return sql
+
+    @staticmethod
+    def create_update_converted_sql(id_num, media_out):
+        sql = None
+        if id_num is not None:
+            sql = "UPDATE contests_voice " \
+                    " SET state = 'CVD', " \
+                    " voice_converted_file = '" + media_out + \
+                    "' WHERE id =(" + str(id_num) + ")"
         return sql
 
