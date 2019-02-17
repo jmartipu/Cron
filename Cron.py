@@ -1,34 +1,10 @@
-import threading
-from queue import Queue
+from threading import Thread
+from time import sleep
+
 import Settings
 import subprocess
 from DbConnection import DbConnection
 from Voice import Voice
-
-NUMBER_OF_THREADS = 5
-JOB_NUMBER = [1]
-queue = Queue()
-
-
-def create_workers():
-    for _ in range(NUMBER_OF_THREADS):
-        t = threading.Thread(target=work)
-        t.daemon = True
-        t.start()
-
-
-def work():
-    while True:
-        x = queue.get()
-        if x == 1:
-            convert()
-        queue.task_done()
-
-
-def create_jobs():
-    for x in JOB_NUMBER:
-        queue.put(x)
-    queue.join()
 
 
 def convert():
@@ -69,7 +45,10 @@ def convert():
 
 
 if __name__ == '__main__':
-    create_workers()
-    create_jobs()
+    while True:
+        Thread(target=convert)
+        print('alive')
+        sleep(5)
+
 
 
