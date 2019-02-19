@@ -8,7 +8,7 @@ import Settings
 class Email:
     @staticmethod
     def send_email(name, tittle, email):
-        s = smtplib.SMTP(host='smtp-mail.outlook.com', port=587)
+        s = smtplib.SMTP(host='smtp.office365.com', port=587)
         s.starttls()
         s.login(Settings.EMAIL_ADDRESS, Settings.EMAIL_PASSWORD)
         msg = MIMEMultipart()  # create a message
