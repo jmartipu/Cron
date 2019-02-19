@@ -17,7 +17,7 @@ class Voice:
     def create_update_converting_sql(list_voices):
         sql = None
         if list_voices is not None:
-            sql = "UPDATE contests_voice SET state = 'CVG' WHERE id in("
+            sql = "UPDATE contests_voice SET converted_date_start = NOW(), state = 'CVG' WHERE id in("
             for voice in list_voices:
                 sql = sql + str(voice.id_num) + ","
             sql = sql[:-1]
@@ -29,7 +29,7 @@ class Voice:
         sql = None
         if id_num is not None:
             sql = "UPDATE contests_voice " \
-                    " SET state = 'CVD', " \
+                    " SET converted_date_end = NOW(), state = 'CVD', " \
                     " voice_converted_file = '" + media_out + \
                     "' WHERE id =(" + str(id_num) + ")"
         return sql
