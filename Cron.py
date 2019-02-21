@@ -58,7 +58,7 @@ if __name__ == '__main__':
     while True:
         Thread(target=convert).start()
         print('alive')
-        sleep(3)
+        sleep(1)
 
 
 

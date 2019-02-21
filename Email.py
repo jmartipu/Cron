@@ -12,7 +12,7 @@ class Email:
         s.starttls()
         s.login(Settings.EMAIL_ADDRESS, Settings.EMAIL_PASSWORD)
         msg = MIMEMultipart()  # create a message
-        message = "Sr: " + name + "\n Su archivo " + tittle +  " ya fue cargado"
+        message = "Gracias por usar supervoices,  " + name + "\n Su archivo " + tittle +  " ya fue cargado"
 
         msg['From'] = Settings.EMAIL_ADDRESS
         msg['To'] = email
