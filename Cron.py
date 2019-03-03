@@ -43,21 +43,23 @@ def convert():
         if voice.voice_file[-3:] != 'mp3':
             try:
                 media_in = Settings.MEDIA_DIR + voice.voice_file
+                dir_out = Settings.MEDIA_DIR + 'converted/'
                 path_out = 'converted/' + file_mp3 + 'mp3'
                 media_out = Settings.MEDIA_DIR + path_out
-                print("in: " + media_in + "\n")
-                print("out: " + media_out + "\n")
-                #my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out,
+                # print("media_in: " + media_in + "\n")
+                # print("media_out: " + media_out + "\n")
+                # print("path_out: " + path_out + "\n")
+                # my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out,
                 #                                        voice.email, voice.tittle, voice.name])
-                if not os.path.exists(media_out):
-                    os.makedirs(media_out)
-                ffmpeg(media_in=media_in, media_out=media_out, id_num=voice.id_num, path_out=path_out,email=voice.email,
+                if not os.path.exists(dir_out):
+                    os.makedirs(dir_out)
+                ffmpeg(media_in=media_in, media_out=media_out, id_num=voice.id_num, path_out=path_out, email=voice.email,
                        tittle=voice.tittle, name=voice.tittle)
                 #my_thread.start()
                 #my_thread.join(60)
 
             except OSError as e:
-                print('error de os')
+                print("Error en sistema operativo")
 
 
 if __name__ == '__main__':
