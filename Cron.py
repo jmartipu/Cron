@@ -42,13 +42,16 @@ def convert():
         if voice.voice_file[-3:] != 'mp3':
             try:
                 media_in = Settings.MEDIA_DIR + voice.voice_file
+                print("in: " + media_in + "\n")
+                print("out: " + media_out + "\n")
                 path_out = 'converted/' + file_mp3 + 'mp3'
                 media_out = Settings.MEDIA_DIR + path_out
-                my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out,
-                                                        voice.email, voice.tittle, voice.name])
-
-                my_thread.start()
-                my_thread.join(60)
+                #my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out,
+                #                                        voice.email, voice.tittle, voice.name])
+                ffmpeg(media_in=media_in, media_out=media_out, id_num=voice.id_num, path_out=path_out,email=voice.email,
+                       tittle=voice.tittle, name=voice.tittle)
+                #my_thread.start()
+                #my_thread.join(60)
 
             except OSError as e:
                 print('error de os')
@@ -56,9 +59,10 @@ def convert():
 
 if __name__ == '__main__':
     while True:
-        Thread(target=convert).start()
+        # Thread(target=convert).start()
+        convert()
         print('alive')
-        sleep(1)
+        sleep(Settings.SLEEP_TIME)
 
 
 
