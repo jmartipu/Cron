@@ -42,10 +42,10 @@ def convert():
         if voice.voice_file[-3:] != 'mp3':
             try:
                 media_in = Settings.MEDIA_DIR + voice.voice_file
-                print("in: " + media_in + "\n")
-                print("out: " + media_out + "\n")
                 path_out = 'converted/' + file_mp3 + 'mp3'
                 media_out = Settings.MEDIA_DIR + path_out
+                print("in: " + media_in + "\n")
+                print("out: " + media_out + "\n")
                 #my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out,
                 #                                        voice.email, voice.tittle, voice.name])
                 ffmpeg(media_in=media_in, media_out=media_out, id_num=voice.id_num, path_out=path_out,email=voice.email,

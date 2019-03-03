@@ -8,4 +8,4 @@ USER = os.environ.get('PGUSER')
 PASSWORD = os.environ.get('PGPASSWORD')
 EMAIL_ADDRESS = os.environ.get('EMAIL_ADDRESS')
 EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
-SLEEP_TIME = 10
+SLEEP_TIME = 5
