@@ -1,3 +1,4 @@
+import os
 from threading import Thread
 from time import sleep
 import Settings
@@ -48,6 +49,8 @@ def convert():
                 print("out: " + media_out + "\n")
                 #my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out,
                 #                                        voice.email, voice.tittle, voice.name])
+                if not os.path.exists(media_out):
+                    os.makedirs(media_out)
                 ffmpeg(media_in=media_in, media_out=media_out, id_num=voice.id_num, path_out=path_out,email=voice.email,
                        tittle=voice.tittle, name=voice.tittle)
                 #my_thread.start()
