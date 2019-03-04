@@ -1,6 +1,6 @@
 import os
 
-MEDIA_DIR = '/media/'
+MEDIA_DIR = './media/'
 HOST = os.environ.get('DATABASE_HOST')
 PORT = os.environ.get('DATABASE_PORT')
 DATABASE = os.environ.get('DATABASE_NAME')
