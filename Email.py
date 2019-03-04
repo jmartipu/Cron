@@ -8,9 +8,9 @@ import Settings
 class Email:
     @staticmethod
     def send_email(name, tittle, email):
-        s = smtplib.SMTP(host='smtp.office365.com', port=587)
+        s = smtplib.SMTP(host=Settings.EMAIL_SMTP_HOST, port=Settings.EMAIL_SMTP_PORT)
         s.starttls()
-        s.login(Settings.EMAIL_ADDRESS, Settings.EMAIL_PASSWORD)
+        s.login(Settings.EMAIL_USERNAME, Settings.EMAIL_PASSWORD)
         msg = MIMEMultipart()  # create a message
         message = "Gracias por usar supervoices,  " + name + "\n Su archivo " + tittle +  " ya fue cargado"
 
