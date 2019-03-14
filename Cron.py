@@ -19,7 +19,7 @@ def ffmpeg(media_in, media_out, id_num, path_out, email, tittle, name):
             database_connection = DbConnection()
             with database_connection:
                 database_connection.update(Voice.create_update_converted_sql(id_num, path_out))
-                #Email.send_email(email=email, tittle=tittle, name=name)
+                Email.send_email(email=email, tittle=tittle, name=name)
         except:
             print('Error actualizando')
 
