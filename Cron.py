@@ -1,6 +1,7 @@
 import os
 from threading import Thread
 from time import sleep
+import datetime
 import Settings
 import subprocess
 from Email import Email
@@ -18,7 +19,7 @@ def ffmpeg(media_in, media_out, id_num, path_out, email, tittle, name):
             database_connection = DbConnection()
             with database_connection:
                 database_connection.update(Voice.create_update_converted_sql(id_num, path_out))
-                Email.send_email(email=email, tittle=tittle, name=name)
+                #Email.send_email(email=email, tittle=tittle, name=name)
         except:
             print('Error actualizando')
 
@@ -49,14 +50,15 @@ def convert():
                 # print("media_in: " + media_in + "\n")
                 # print("media_out: " + media_out + "\n")
                 # print("path_out: " + path_out + "\n")
-                # my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out,
-                #                                        voice.email, voice.tittle, voice.name])
                 if not os.path.exists(dir_out):
                     os.makedirs(dir_out)
-                ffmpeg(media_in=media_in, media_out=media_out, id_num=voice.id_num, path_out=path_out, email=voice.email,
-                       tittle=voice.tittle, name=voice.tittle)
-                #my_thread.start()
-                #my_thread.join(60)
+                
+                my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out,
+                                                        voice.email, voice.tittle, voice.name])
+                #ffmpeg(media_in=media_in, media_out=media_out, id_num=voice.id_num, path_out=path_out, email=voice.email,
+                #       tittle=voice.tittle, name=voice.tittle)
+                my_thread.start()
+                my_thread.join(60)
 
             except OSError as e:
                 print("Error en sistema operativo")
@@ -64,9 +66,10 @@ def convert():
 
 if __name__ == '__main__':
     while True:
-        # Thread(target=convert).start()
-        convert()
-        print('alive')
+        Thread(target=convert).start()
+        #convert()
+        st = str(datetime.datetime.now())
+        print(st + ' : alive')
         sleep(Settings.SLEEP_TIME)
 
 
