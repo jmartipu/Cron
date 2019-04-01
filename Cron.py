@@ -10,7 +10,7 @@ from Voice import Voice
 
 
 def ffmpeg(media_in, media_out, id_num, path_out, email, tittle, name):
-    output = subprocess.call(['ffmpeg', '-i', media_in,
+    output = subprocess.call(['/home/ec2-user/bin/ffmpeg', '-i', media_in,
                      media_out, '-y'])
     if output < 0:
         print('error en conversion')
@@ -47,16 +47,13 @@ def convert():
                 dir_out = Settings.MEDIA_DIR + 'converted/'
                 path_out = 'converted/' + file_mp3 + 'mp3'
                 media_out = Settings.MEDIA_DIR + path_out
-                # print("media_in: " + media_in + "\n")
-                # print("media_out: " + media_out + "\n")
-                # print("path_out: " + path_out + "\n")
+                
                 if not os.path.exists(dir_out):
                     os.makedirs(dir_out)
                 
                 my_thread = Thread(target=ffmpeg, args=[media_in, media_out, voice.id_num, path_out,
                                                         voice.email, voice.tittle, voice.name])
-                #ffmpeg(media_in=media_in, media_out=media_out, id_num=voice.id_num, path_out=path_out, email=voice.email,
-                #       tittle=voice.tittle, name=voice.tittle)
+                
                 my_thread.start()
                 my_thread.join(60)
 
@@ -67,7 +64,6 @@ def convert():
 if __name__ == '__main__':
     while True:
         Thread(target=convert).start()
-        #convert()
         st = str(datetime.datetime.now())
         print(st + ' : alive')
         sleep(Settings.SLEEP_TIME)
