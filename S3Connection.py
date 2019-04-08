@@ -17,10 +17,10 @@ class S3Connection:
             self.bucket = self.s3.Bucket(Settings.AWS_STORAGE_BUCKET_NAME_S3)
             self.exists = True
         except ConnectionError:
-            print("No se puede conectar a la base de datos")
+            print("No se puede conectar a S3")
 
         except:
-            print("Error General")
+            print("Error General S3")
 
     def read(self, key, download_key):
         try:
@@ -48,7 +48,7 @@ class S3Connection:
                 self.exists = False
 
         except Exception as e:
-            print('Error Cargando')
+            print('Error Cargando S3')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         print("S3 Terminada exit")

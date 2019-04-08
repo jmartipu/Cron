@@ -15,7 +15,7 @@ def ffmpeg(media_in, media_out, id_num, path_out, email, tittle, name):
     output = subprocess.call(['/home/ec2-user/bin/ffmpeg', '-i', media_in,
                      media_out, '-y'])
     if output < 0:
-        print('error en conversion')
+        print('error en conversion Cron')
     else:
         try:
             database_connection = DbConnection()
@@ -23,16 +23,18 @@ def ffmpeg(media_in, media_out, id_num, path_out, email, tittle, name):
                 database_connection.update(Voice.create_update_converted_sql(id_num, path_out))
                 Email.send_email(email=email, tittle=tittle, name=name)
         except:
-            print('Error actualizando')
+            print('Error actualizando Cron')
 
 
 def convert():
     list_voices = []
     voice_ids = []
-
+    print('1')
     try:
         database_connection = DbConnection()
+        print('2')
         s3_connection = S3Connection()
+        print('3')
 
         with database_connection:
             query_voices = database_connection.scan('Voice', 'state', 'INP')
@@ -127,10 +129,10 @@ def convert():
                             database_connection.update('Voice', item)
                             print('9')
                         except OSError as e:
-                            print("Error en sistema operativo")
+                            print("Error en sistema operativo Cron")
 
     except Exception as e:
-        print('Error General')
+        print('Error General Cron')
 
 
 if __name__ == '__main__':
