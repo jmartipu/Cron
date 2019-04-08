@@ -1,20 +1,27 @@
-import psycopg2
+import decimal
+import json
+from decimal import Decimal
+
+import boto3
+from boto3.dynamodb.conditions import Key, Attr
 import Settings
 
 
 class DbConnection:
     def __enter__(self):
         try:
-            self.connection = psycopg2.connect(
-                host=Settings.HOST,
-                port=Settings.PORT,
-                database=Settings.DATABASE,
-                user=Settings.USER,
-                password=Settings.PASSWORD,
-            )
-            self.connection.autocommit = True
-            self.cursor = self.connection.cursor()
-            # print("Conectado")
+            self.dynamodbResource = boto3.resource(
+                Settings.DATABASE_NAME_DYN,
+                aws_access_key_id=Settings.AWS_ACCESS_KEY_ID_DYN,
+                aws_secret_access_key=Settings.AWS_SECRET_ACCESS_KEY_DYN,
+                region_name=Settings.REGION_NAME_DYN)
+
+            self.dynamodbClient = boto3.client(
+                Settings.DATABASE_NAME_DYN,
+                aws_access_key_id=Settings.AWS_ACCESS_KEY_ID_DYN,
+                aws_secret_access_key=Settings.AWS_SECRET_ACCESS_KEY_DYN,
+                region_name=Settings.REGION_NAME_DYN)
+            self.s3 = boto3.resource('s3')
 
         except ConnectionError:
             print("No se puede conectar a la base de datos")
@@ -22,28 +29,27 @@ class DbConnection:
         except:
             print("Error General")
 
-    def query(self, query):
-        results = []
+    def scan(self, table_name, attr_name, value_name):
         try:
-            self.cursor.execute(query)
-            results = self.cursor.fetchall()
+            table = self.dynamodbResource.Table(table_name)
+
+            response = table.scan(FilterExpression=Attr(attr_name).eq(value_name))
+            return response['Items']
         except:
             print("Error en consulta")
 
-        return results
+        return []
 
-    def update(self, query):
+
+    def update(self, table_name, item):
         try:
-            self.cursor.execute(query)
-        except:
-            print("Error en actualizacion")
+            table = self.dynamodbResource.Table(table_name)
+            table.put_item(Item=item)
+        except Exception as e:
+            print('Error Actualizando')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.connection.close()
-        # print("Conexion Terminada exit")
-
-
-
+        print("Conexion Terminada exit")
 
 
 
