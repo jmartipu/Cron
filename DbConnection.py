@@ -26,8 +26,8 @@ class DbConnection:
         except ConnectionError:
             print("No se puede conectar a la base de datos")
 
-        except:
-            print("Error General Dynamo")
+        except Exception as e:
+            print(e)
 
     def scan(self, table_name, attr_name, value_name):
         try:
@@ -35,8 +35,8 @@ class DbConnection:
 
             response = table.scan(FilterExpression=Attr(attr_name).eq(value_name))
             return response['Items']
-        except:
-            print("Error en consulta Dynamo")
+        except Exception as e:
+            print(e)
 
         return []
 

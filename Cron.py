@@ -12,8 +12,10 @@ from Voice import Voice
 
 
 def ffmpeg(media_in, media_out, id_num, path_out, email, tittle, name):
+    print('ff1')
     output = subprocess.call(['/home/ec2-user/bin/ffmpeg', '-i', media_in,
                      media_out, '-y'])
+    print('ff2')
     if output < 0:
         print('error en conversion Cron')
     else:
@@ -29,15 +31,13 @@ def ffmpeg(media_in, media_out, id_num, path_out, email, tittle, name):
 def convert():
     list_voices = []
     voice_ids = []
-    print('1')
     try:
         database_connection = DbConnection()
-        print('2')
         s3_connection = S3Connection()
-        print('3')
 
         with database_connection:
             query_voices = database_connection.scan('Voice', 'state', 'INP')
+            
             for voice in query_voices:
                 voice_file = voice['voice_file']
                 voice_id = voice['voice_id']
@@ -90,7 +90,7 @@ def convert():
 
                             database_connection.update('Voice', item)
                             print('5')
-                            ffmpeg(media_in, media_out, voice.id_num, path_out, voice.email, voice.tittle, voice.name)
+                            ffmpeg(media_in, media_out, voice_id, path_out, email, tittle, name)
                             print('6')
                             s3_connection.upload(file_mp3 + 'mp3', media_out)
                             print('7')
@@ -132,7 +132,7 @@ def convert():
                             print("Error en sistema operativo Cron")
 
     except Exception as e:
-        print('Error General Cron')
+        print(e)
 
 
 if __name__ == '__main__':
