@@ -24,12 +24,17 @@ class S3Connection:
 
     def read(self, key, download_key):
         try:
+            print('inicia descarga')
+            print(key)
+            print(download_key)
             self.bucket.download_file(key, download_key)
+            print('termina descarga')
 
         except botocore.exceptions.ClientError as e:
             # If a client error is thrown, then check that it was a 404 error.
             # If it was a 404 error, then the bucket does not exist.
             error_code = e.response['Error']['Code']
+            print (e)
             if error_code == '404':
                 self.exists = False
 
@@ -38,7 +43,7 @@ class S3Connection:
 
     def upload(self, key, upload_key):
         try:
-            self.bucket.upload_file(upload_key, key)
+            self.bucket.upload_file(upload_key, key, ExtraArgs={'ACL':'public-read'})
 
         except botocore.exceptions.ClientError as e:
             # If a client error is thrown, then check that it was a 404 error.
@@ -48,7 +53,7 @@ class S3Connection:
                 self.exists = False
 
         except Exception as e:
-            print('Error Cargando S3')
+            print(e)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         print("S3 Terminada exit")

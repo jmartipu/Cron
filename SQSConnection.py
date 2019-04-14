@@ -4,8 +4,15 @@ import Settings
 
 
 class SQSConnection:
-    def __init__(self):
-        self.exists = True
+    session = boto3.Session(
+                aws_access_key_id=Settings.AWS_ACCESS_KEY_ID_DYN,
+                aws_secret_access_key=Settings.AWS_SECRET_ACCESS_KEY_DYN,
+            )
+    sqs = session.client('sqs', region_name='us-east-2')
+    queue_url = Settings.AWS_QUEUE_URL
+    exists = True
+    message = ''
+    receipt_handle = ''
 
     def __enter__(self):
         try:
@@ -13,33 +20,34 @@ class SQSConnection:
                 aws_access_key_id=Settings.AWS_ACCESS_KEY_ID_DYN,
                 aws_secret_access_key=Settings.AWS_SECRET_ACCESS_KEY_DYN,
             )
-            self.sqs = self.session.resource('sqs')
-            self.queue_url = 'SQS_QUEUE_URL'
+            self.sqs = self.session.client('sqs', region_name='us-east-2')
+            self.queue_url = Settings.AWS_QUEUE_URL
 
         except ConnectionError:
             print("No se puede conectar a SQS")
 
-        except:
-            print("Error General SQS")
+        except Exception as e:
+            print(e)
 
-    def receive(self, key, download_key):
+    def receive(self):
         try:
-            
-            response = sqs.receive_message(
+            response = self.sqs.receive_message(
               QueueUrl=self.queue_url,
               AttributeNames=[
-                  'SentTimestamp'
+                  'ALL'
               ],
               MaxNumberOfMessages=1,
               MessageAttributeNames=[
                   'All'
               ],
-              VisibilityTimeout=0,
-              WaitTimeSeconds=0
+              VisibilityTimeout=20,
+              WaitTimeSeconds=2
             )
-            message = response['Messages'][0]
-            receipt_handle = message['ReceiptHandle']
-
+            if response is not None:
+              self.message = response['Messages'][0]
+              self.receipt_handle = self.message['ReceiptHandle']
+             
+            
         except botocore.exceptions.ClientError as e:
             # If a client error is thrown, then check that it was a 404 error.
             # If it was a 404 error, then the bucket does not exist.
@@ -48,14 +56,18 @@ class SQSConnection:
                 self.exists = False
 
         except Exception as e:
-            print('Error Leyendo')
+            print(e)
+        
 
-    def delete(self, receipt_handle):
+    def delete(self):
         try:
-            sqs.delete_message(
-              QueueUrl=self.queue_url,
-              ReceiptHandle=receipt_handle
+            print(self.receipt_handle)
+            self.sqs.delete_message(
+              QueueUrl=self.queue_url,  
+              ReceiptHandle=self.receipt_handle
             )
+            self.message = ''
+            self.receipt_handle = ''
 
         except botocore.exceptions.ClientError as e:
             # If a client error is thrown, then check that it was a 404 error.
@@ -65,10 +77,10 @@ class SQSConnection:
                 self.exists = False
 
         except Exception as e:
-            print('Error Cargando S3')
+            print('Error Cargando SQS')
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        print("S3 Terminada exit")
+        print("SQS Terminada exit")
 
 
 

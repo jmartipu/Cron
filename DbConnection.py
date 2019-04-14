@@ -8,6 +8,19 @@ import Settings
 
 
 class DbConnection:
+    
+    dynamodbResource = boto3.resource(
+                Settings.DATABASE_NAME_DYN,
+                aws_access_key_id=Settings.AWS_ACCESS_KEY_ID_DYN,
+                aws_secret_access_key=Settings.AWS_SECRET_ACCESS_KEY_DYN,
+                region_name=Settings.REGION_NAME_DYN)
+    
+    dynamodbClient = boto3.client(
+                Settings.DATABASE_NAME_DYN,
+                aws_access_key_id=Settings.AWS_ACCESS_KEY_ID_DYN,
+                aws_secret_access_key=Settings.AWS_SECRET_ACCESS_KEY_DYN,
+                region_name=Settings.REGION_NAME_DYN)
+                
     def __enter__(self):
         try:
             self.dynamodbResource = boto3.resource(
@@ -21,6 +34,7 @@ class DbConnection:
                 aws_access_key_id=Settings.AWS_ACCESS_KEY_ID_DYN,
                 aws_secret_access_key=Settings.AWS_SECRET_ACCESS_KEY_DYN,
                 region_name=Settings.REGION_NAME_DYN)
+                
             self.s3 = boto3.resource('s3')
 
         except ConnectionError:
@@ -41,12 +55,17 @@ class DbConnection:
         return []
 
 
-    def update(self, table_name, item):
+    def update(self, table_name, key, update_exp, attr_names , attr_values ):
         try:
-            table = self.dynamodbResource.Table(table_name)
-            table.put_item(Item=item)
+            table = self.dynamodbResource.Table('Voice')
+            table.update_item(
+                Key=key,
+                UpdateExpression=update_exp,
+                ExpressionAttributeNames = attr_names,
+                ExpressionAttributeValues = attr_values
+            )
         except Exception as e:
-            print('Error Actualizando Dynamo')
+            print(e)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         print("Conexion Terminada exit")
