@@ -79,7 +79,7 @@ def convert():
                     except OSError as e:
                         print(e)
                 if Settings.EMAIL_SEND == 'Y':
-                    Email.send_email(email='jormartin77@gmail.com', tittle=tittle, name=user_first_name)
+                    Email.send_email(email=email, tittle=tittle, name=user_first_name)
 
                 os.remove(media_in)
               sqs_connection.delete()
