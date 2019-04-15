@@ -10,6 +10,7 @@ from DbConnection import DbConnection
 from S3Connection import S3Connection
 from SQSConnection import SQSConnection
 from Voice import Voice
+from threading import Thread
 
 
 def ffmpeg(media_in, media_out):
@@ -72,7 +73,7 @@ def convert():
                         converted_date_end = datetime.datetime.utcnow().isoformat()
                         s3_connection.upload(path_out , media_out)
                         
-                        database_connection.update('Voice', {'voice_key': voice_key},'SET #st = :sta, converted_date_end = :cde, voice_converted_file = :vcf', {'#st': 'state'}, {':sta': 'CVT', ':cde':converted_date_end, ':vcf':db_path_out})
+                        database_connection.update('Voice', {'voice_key': voice_key},'SET #st = :sta, converted_date_end = :cde, voice_converted_file = :vcf', {'#st': 'state'}, {':sta': 'CVD', ':cde':converted_date_end, ':vcf':db_path_out})
                         
                         os.remove(media_out)
                     except OSError as e:
@@ -88,12 +89,9 @@ def convert():
 
 
 if __name__ == '__main__':
-    # while True:
-        # Thread(target=convert).start()
-        convert()
-        # st = str(datetime.datetime.now())
-        # print(st + ' : alive')
-        # sleep(Settings.SLEEP_TIME)
-
-
-
+    while True:
+        Thread(target=convert).start()
+        #convert()
+        st = str(datetime.datetime.now())
+        print(st + ' : alive')
+        sleep(Settings.SLEEP_TIME)
