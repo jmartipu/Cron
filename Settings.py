@@ -18,6 +18,6 @@ DATABASE_NAME_DYN = os.environ.get('DATABASE_NAME_DYN')
 AWS_STORAGE_BUCKET_NAME_S3 = os.environ.get('AWS_STORAGE_BUCKET_NAME_S3')
 AWS_ACCESS_KEY_ID_S3 = os.environ.get('AWS_ACCESS_KEY_ID_S3') #os.environ.get('AWS_ACCESS_KEY_ID_S3')
 AWS_SECRET_ACCESS_KEY_S3 = os.environ.get('AWS_SECRET_ACCESS_KEY_S3') # os.environ.get('AWS_SECRET_ACCESS_KEY_S3')
-AWS_QUEUE_URL = 'https://us-east-2.queue.amazonaws.com/942770429245/supervoices_sqs.fifo'
+AWS_QUEUE_URL = os.environ.get('AWS_QUEUE_URL') #'https://us-east-2.queue.amazonaws.com/942770429245/supervoices_sqs.fifo'
 EMAIL_SEND = 'Y'
 SLEEP_TIME = 5
